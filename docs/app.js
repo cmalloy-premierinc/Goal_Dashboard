@@ -17,6 +17,7 @@
 
   const charts = new Map(); // goal key -> Chart instance (grid card)
   let modalChart = null;
+  let MONTH_QUARTERS = []; // parallel to each goal's months[], set once data.json loads
 
   function colorForSeries(series, tierIndex) {
     if (series.type === "Threshold") return THRESHOLD_COLOR;
@@ -54,8 +55,11 @@
     }));
   }
 
-  // Shades each fiscal quarter's column with its own distinct tint, reading
-  // the quarter tag ("(Q1)" etc.) straight out of the month label strings.
+  // Shades each fiscal quarter's column with its own distinct tint, looked up
+  // by month index in MONTH_QUARTERS (not parsed from the label text, so the
+  // displayed month labels can stay short - long, rotated "Jul (Q1)"-style
+  // labels were eating vertical plot space and squeezing Threshold/Target
+  // lines flat on some charts).
   // Each month's tick sits in the center of its own band (band edges are the
   // midpoints between it and its neighbors, with the first/last bands
   // extending out to the chart's edges) - this is what makes the last band
@@ -93,9 +97,9 @@
       ctx.save();
       let i = 0;
       while (i < labels.length) {
-        const q = quarterOf(labels[i]);
+        const q = quarterOf(i);
         let j = i;
-        while (j + 1 < labels.length && quarterOf(labels[j + 1]) === q) j++;
+        while (j + 1 < labels.length && quarterOf(j + 1) === q) j++;
         const tint = quarterTint(q);
         if (tint) {
           ctx.fillStyle = tint;
@@ -107,9 +111,8 @@
     },
   };
 
-  function quarterOf(label) {
-    const m = /\((Q\d)\)/.exec(label || "");
-    return m ? m[1] : null;
+  function quarterOf(idx) {
+    return MONTH_QUARTERS[idx] || null;
   }
 
   function makeConfig(goal, { legend = true, titleFont = 11 } = {}) {
@@ -122,7 +125,7 @@
         animation: false,
         interaction: { mode: "nearest", axis: "x", intersect: false },
         scales: {
-          x: { ticks: { font: { size: titleFont }, maxRotation: 45, minRotation: 45 } },
+          x: { ticks: { font: { size: titleFont }, autoSkip: true, maxRotation: 0, minRotation: 0 } },
           y: { title: { display: true, text: goal.yLabel, font: { size: titleFont } }, beginAtZero: false },
         },
         plugins: {
@@ -212,6 +215,7 @@
   fetch(`data.json?v=${Date.now()}`, { cache: "no-store" })
     .then(r => r.json())
     .then(data => {
+      MONTH_QUARTERS = data.monthQuarters || [];
       renderGrid(data);
       document.getElementById("status-line").textContent =
         `Loaded ${data.goals.length} goals from ${data.generatedFromRows} data rows.`;

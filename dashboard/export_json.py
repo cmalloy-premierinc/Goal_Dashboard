@@ -10,7 +10,13 @@ import re
 from data_pipeline import build_dataframe
 from goal_specs import MONTHS, QUARTER_OF_MONTH
 
-MONTH_LABELS = [m if m == "Base" else f"{m} ({QUARTER_OF_MONTH[m]})" for m in MONTHS]
+# Short tick labels ('Jul', not 'Jul (Q1)') so the x-axis needs less rotation
+# and less vertical space, leaving more room for the plot itself (this is what
+# was squeezing Threshold/Target lines flat on some charts). Quarter shading
+# already conveys the quarter visually, so the tag moves to its own array
+# (MONTH_QUARTERS) instead of being embedded in the displayed label text.
+MONTH_LABELS = list(MONTHS)
+MONTH_QUARTERS = [None if m == "Base" else QUARTER_OF_MONTH[m] for m in MONTHS]
 
 _TIER_MAGNITUDE_RE = re.compile(r"([\d.]+)\s*([KM]?)", re.IGNORECASE)
 _SUFFIX_MULTIPLIER = {"": 1, "K": 1_000, "M": 1_000_000}
@@ -72,7 +78,7 @@ def build_site_data(csv_path):
             series=series,
         ))
     goals.sort(key=lambda g: g["order"])
-    return dict(generatedFromRows=len(df), goals=goals)
+    return dict(generatedFromRows=len(df), monthQuarters=MONTH_QUARTERS, goals=goals)
 
 
 def write_site_data(csv_path, out_path):

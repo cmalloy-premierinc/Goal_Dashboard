@@ -1,5 +1,20 @@
 {
   "generatedFromRows": 554,
+  "monthQuarters": [
+    null,
+    "Q1",
+    "Q1",
+    "Q1",
+    "Q2",
+    "Q2",
+    "Q2",
+    "Q3",
+    "Q3",
+    "Q3",
+    "Q4",
+    "Q4",
+    "Q4"
+  ],
   "goals": [
     {
       "key": "food_distributor_nii",
@@ -15,18 +30,18 @@
       "requiredPaceText": "Required Jun Target Pace (-6.5/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -165,18 +180,18 @@
       "requiredPaceText": "Required Jun Target Pace (-10.2/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -315,18 +330,18 @@
       "requiredPaceText": "Required Jun Target Pace (+0.4/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -505,18 +520,18 @@
       "requiredPaceText": "Required Jun Target Pace (-62.1/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -615,18 +630,18 @@
       "requiredPaceText": "Required Jun Target Pace (-10.8/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -725,18 +740,18 @@
       "requiredPaceText": "Required Jun Target Pace (-4.3/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -835,18 +850,18 @@
       "requiredPaceText": "Required Jun Target Pace (+1.4%/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -945,18 +960,18 @@
       "requiredPaceText": "Required Jun Target Pace (-1.0/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -1055,18 +1070,18 @@
       "requiredPaceText": "Required Dec Target Pace (-622.7/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
@@ -1165,18 +1180,18 @@
       "requiredPaceText": "Required Jun Target Pace (+4.9%/mo)",
       "months": [
         "Base",
-        "Jul (Q1)",
-        "Aug (Q1)",
-        "Sep (Q1)",
-        "Oct (Q2)",
-        "Nov (Q2)",
-        "Dec (Q2)",
-        "Jan (Q3)",
-        "Feb (Q3)",
-        "Mar (Q3)",
-        "Apr (Q4)",
-        "May (Q4)",
-        "Jun (Q4)"
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun"
       ],
       "series": [
         {
