@@ -207,7 +207,9 @@
     if (e.key === "Escape") closeModal();
   });
 
-  fetch("data.json")
+  // Cache-bust with the load time so browsers/CDN edges never serve a stale
+  // data.json after goals.csv is updated and re-exported.
+  fetch(`data.json?v=${Date.now()}`, { cache: "no-store" })
     .then(r => r.json())
     .then(data => {
       renderGrid(data);
