@@ -40,19 +40,33 @@
 
   function buildDatasets(goal) {
     const tierIdx = tierIndexMap(goal);
-    return goal.series.map(s => ({
-      label: s.name,
-      data: s.data,
-      borderColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
-      backgroundColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
-      borderDash: dashForSeries(s),
-      borderWidth: s.type === "Target" || s.type === "Threshold" ? 2 : 2.25,
-      pointRadius: s.type === "Actual" ? 3 : 0,
-      pointHoverRadius: 4,
-      spanGaps: false,
-      tension: 0,
-      fill: false,
-    }));
+    const thresholdIdx = goal.series.findIndex(s => s.type === "Threshold");
+    return goal.series.map((s, i) => {
+      const dataset = {
+        label: s.name,
+        data: s.data,
+        borderColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
+        backgroundColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
+        borderDash: dashForSeries(s),
+        borderWidth: s.type === "Target" || s.type === "Threshold" ? 2 : 2.25,
+        pointRadius: s.type === "Actual" ? 3 : 0,
+        pointHoverRadius: 4,
+        spanGaps: false,
+        tension: 0,
+        fill: false,
+      };
+      // Shade the zone between Threshold and Target so it reads as an
+      // obvious band even when the two lines sit numerically close together
+      // relative to the rest of the chart's scale.
+      if (s.type === "Target" && thresholdIdx !== -1 && i !== thresholdIdx) {
+        dataset.fill = {
+          target: thresholdIdx,
+          above: PREMIER_YELLOW + "2E",
+          below: PREMIER_YELLOW + "2E",
+        };
+      }
+      return dataset;
+    });
   }
 
   // Shades each fiscal quarter's column with its own distinct tint, looked up
@@ -134,24 +148,45 @@
     return centers;
   }
 
+  // Rounds up to a "nice" number (1/2/2.5/5/10 x a power of ten) so the Y axis
+  // max - and therefore its auto-generated tick values - land on whole,
+  // human-friendly numbers instead of an arbitrary padded decimal.
+  function niceCeil(value) {
+    if (!(value > 0)) return 1;
+    const exponent = Math.floor(Math.log10(value));
+    const magnitude = Math.pow(10, exponent);
+    const residual = value / magnitude;
+    let niceResidual;
+    if (residual <= 1) niceResidual = 1;
+    else if (residual <= 2) niceResidual = 2;
+    else if (residual <= 2.5) niceResidual = 2.5;
+    else if (residual <= 5) niceResidual = 5;
+    else niceResidual = 10;
+    return niceResidual * magnitude;
+  }
+
   // The Y axis was auto-scaling to fit runaway diverging Forecast lines (which
   // can shoot up into the hundreds), squeezing the flat Threshold/Target
   // reference lines down near zero. Scale instead to the Actual/Threshold/
   // Target range - a Forecast that blows past it is still drawn, just clipped
   // at the top edge, which is more honest than stretching the whole chart.
+  // "Base" (month index 0, last fiscal year's value) is also excluded: it's
+  // frequently the single largest number in the series and including it
+  // stretches the axis far beyond anything currently happening, squeezing
+  // the Threshold/Target gap even further for no benefit - Base is still
+  // plotted as a point, just not allowed to dictate the scale.
   function yRange(goal) {
     const values = goal.series
       .filter(s => s.type !== "Forecast")
-      .flatMap(s => s.data)
+      .flatMap(s => s.data.slice(1))
       .filter(v => v !== null && v !== undefined);
     if (!values.length) return {};
     const max = Math.max(...values);
-    const min = Math.min(0, ...values);
-    const pad = (max - min) * 0.15 || 1;
-    // A hard max/min (not suggestedMax/Min) so a Forecast line diverging past
-    // this range gets visually clipped at the edge instead of stretching the
-    // whole axis - suggestedMax only raises the floor, it doesn't cap it.
-    return { max: max + pad, min: Math.max(0, min - pad) };
+    // A hard max (not suggestedMax) so a Forecast line diverging past this
+    // range gets visually clipped at the edge instead of stretching the whole
+    // axis - suggestedMax only raises the floor, it doesn't cap it. Rounded
+    // to a "nice" number so ticks come out as whole numbers, not decimals.
+    return { min: 0, max: niceCeil(max * 1.15 || 1), ticks: { precision: 0 } };
   }
 
   function makeConfig(goal, { legend = true, titleFont = 11 } = {}) {
