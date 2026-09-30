@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+dashboard/__pycache__/
+dashboard/output/
+dashboard/_tableau_validator/
+*.pyc

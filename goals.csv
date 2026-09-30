@@ -1,0 +1,55 @@
+Core Goal,Mgr,Team Member,Weight,Comments,Role Specific Goal,Supports:,Service Levels (SLA),FY26 Baseline,"Threshold
+50%","Target
+100%",Jul,Aug,Sep,Oct,Nov,Dec,Jan,Feb,Mar,Apr,May,Jun,Final FY Results,Achievement Percentage %
+Core,Jim/Chris,Chris Kasischke,15.00%,Based on the results at the end of the fiscal year,"Utilize AI to Improve Data Quality or Operational Efficiencies.
+Research and collaborate with Internal or External organizations to determine how AI tools may improve data quality or efficiency.  Propose at least 2 concepts and implement one.",,,,Propose at least 2 concepts,Prove out the proposed concepts,T.B.D,,,,,,,,,,,,,
+Non-Core,Jim,Chris Kasischke,25.00%,Subjective based on manager assessment of results achieved,"1) Support NII from PO, NPC, Market Basket, Rx, Dist. spend, GUDID, Internal Teams & Product Catalog Requests
+2) Keep Incorrect Vend_Types and UOM Orphan PINS at or below June 2024 levels.
+3) Support ENRI/Fusion & PIM alignment development work
+4) Review potential duplicates on different reference numbers.
+5) Support vendor sync in PIL (add EINs to ""critical"" PIL vendors & sync hierarchy), and other PIL health needs
+6) Monitor Daily FUSN metric report - resolve any issues that arise
+7) Reconcile the UOMs between Fusion and PIM so they stay in sync
+8) Develop staff and succession planning.  Demonstrates core leadership competencies
+9) Update existing process mapping documents from the SAIP Data Governance project.",,,,,,,,,,,,,,,,,,,
+Core,Jim/Chris,Chris Kasischke,15.00%,Based on the results at the end of the fiscal year (for items in system >3wks before end of FY),"Food Distributor NII
+Aggregate 12 mos unmatched spend by Distributor and proactively add Mfr items for relevant mfr items.",,New,">$500K - 50
+>$250K - 100",0 > $500K per vendor,5 > $250K per vendor,">$500K = 8
+>$250K = 23",">$500K = 23
+>$250K = 70",,,,,,,,,,,,
+Core,Jim/Chris,Chris,10.00%,Based on the results at the end of the fiscal year (for items in system >3wks before end of FY),"Pharmacy Wholesaler NII
+Aggregate 12 mos unmatched spend by Pharmacy Wholesaler and proactively add Mfr items for relevant mfr items.",,New,">$1M - 35
+>$500K - 61",0 > $1M per vendor,5 > $500K per vendor,">$1M = 196
+>$500K = 110",">$1M = 107
+>$500K = 58",,,,,,,,,,,,
+Core,Jim/Chris,Chris/Conner,10%/5%,Based on the results at the end of the fiscal year (for items in system >2wks before end of FY),"DIST_DATA_MISMATCH - When Distributor Data indicates a distributed item should be on refnum X but is on refnum Y, investigate/resolve.",,,"1,200",120,0,"1,319",843,559,,,,,,,,,,,
+Core,Jim/Chris,Chris/Conner,10%/5%,Based on the results at the end of the fiscal year (for items in system >2wks before end of FY),"PO spend UOM
+Resolve issues where Member Spend data indicates a missing UOM in Fusion",,,780,78,0,711,247,97,,,,,,,,,,,
+Core,Jim/Chris,Chris/Conner,15%/15%,Based on the results at the end of the fiscal year (for items in system >3wks before end of FY),"MedSurg Dist. NII 
+Aggregate 12 mos spend by Manufacturer for all MedSurg distributors (excluding random trading companies that are not researchable) and proactively add Mfr items.",,previous thresholds were $100K & $200K,">=$100K - 14
+>=$50K - 69
+>=$25K - 87",0 > $100K per vendor,5 > $25K per vendor,">=$100K - 4
+>=$50K - 15
+>=$25K - 21",">=$100K - 4
+>=$50K - 10
+>=$25K - 18",">=$100K - 1
+>=$50K - 7
+>=$25K - 13",,,,,,,,,,,
+Core,Jim/Chris,Conner Malloy,CM-10%,Based on the results at the end of the fiscal year (for items in system >2wks before end of FY),"Records with UOM from PKG String not on M Vend Type
+Create process for reconciling OEM UOMs/Pkg string information based on records associated with 12mon spend.",,,0,20,0,98,361,39,,,,,,,,,,,
+Core,Jim/Chris,Conner Malloy,10.00%,Based on PCR categories loaded by Sourcing before June 14th of the FY27,"Process PCRs 
+Process PCRs and analyze AXIS Project Bases for Fusion data cleanup and standardization.","GPO, Margin, Advisory, Remitra",100% of AXIS Projects,146 of 146 (100%) (Anticipate ~ 125 categories for FY26),90%,100%,9 reviewed of 16 (56.25%),13 reviewed of 22 (59.09%),28 reviewed of 32 (87.50%),,,,,,,,,,,
+Core,Jim/Chris,Conner Malloy,10.00%,"Based on Obsolete dates loaded before June 14th, 2027","Obsolete Dates with Spend
+Review records with obsolete dates that also have >$100K of 12 month spend at the reference number to verify item has been discontinued and it is not sold by another OEM.",,,50,<100,0,13 (74%) ,10 (80%),9 (80%),,,,,,,,,,,
+Core,Jim/Chris,Conner Malloy,15.00%,Based on the results at the end of the fiscal year,"Utilize AI to Improve Data Quality or Operational Efficiencies.
+Research and collaborate with Internal or External organizations to determine how AI tools may improve data quality or efficiency.  Propose at least 2 concepts and implement one.",,,,Propose at least 2 concepts,Prove out the proposed concepts,Not yet started - Sheila/Conner description/descriptor cleanse ask/idea from Jim,"Initial Copilot Studio Agent Developed and in Experimentation. Provided Shelia with Link, System Instructions/Prompt.","Initial Copilot Studio Agent Developed and in Experimentation. Provided Shelia with Link, System Instructions/Prompt.",,,,,,,,,,,
+Core,Jim/Chris,Conner Malloy,5.00%,Based on the results at the end of December 2026 (will then change over to maintenance),"BLOCKED PIN ITEMS
+Resolve items through RNM tools to remove items from the FUSN BlockedPimAdds table.  ",,,"1,849",90% by end of Dec,100% by end of Dec,"2,014 (-8.2%)","2,094 (-11.7%)","1,868(-1.0%)",,,,,,,,,,,
+Non-Core,Jim/Chris,Conner Malloy,25.00%,Subjective based on manager assessment of results achieved,"1) Eliminate REF#s w/spend associated with Terminated & Deleted Entity Codes 
+2) Continue to reduce UOM Orphan PINs - dist. UOM PIN without an associated Mfr UOM PIN
+2) Monitor Country of Origin table for NII opportunities and provide feedback to Sourcing on improvements to loaded data.
+4) Reconcile the UOMs between Fusion and PIM so they stay in sync
+5) Pro-actively mine variety of data sources to resolve unmatched spend via NII unrelated to any Core Goal 
+6) Monitor Daily FUSN metric report - resolve any issues that arise
+7). Behaviors - Demonstrates professionalism and individual core competencies
+8) Continue to research and build out new and enhance existing queries / UDFs / Big Query tools to assist the entire Business, not necessarily tied to AI.",,,,,,, ,,,,,,,,,,,,

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FY27 Quantitative Core Goals Dashboard</title>
+<link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>FY27 Quantitative Core Goals Trajectory &amp; Forecast Dashboard</h1>
+    <p class="subtitle">Click any chart to view it full-size. Data refreshes each time <code>goals.csv</code> is updated and the export script is rerun.</p>
+    <p id="status-line" class="status-line"></p>
+  </header>
+
+  <main id="grid" class="grid"></main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close" aria-label="Close">&times;</button>
+      <h2 id="modal-title"></h2>
+      <p id="modal-subtitle" class="modal-subtitle"></p>
+      <div class="modal-canvas-wrap">
+        <canvas id="modal-canvas"></canvas>
+      </div>
+      <p id="modal-pace" class="modal-pace"></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+:root {
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --border: #dde2e8;
+  --text: #1f2933;
+  --muted: #5c6b7a;
+  --accent: #2563eb;
+  font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  padding: 20px 28px 8px;
+  text-align: center;
+}
+
+h1 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status-line {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  padding: 16px 20px 40px;
+}
+
+@media (max-width: 1400px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 860px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px 12px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  min-height: 2.4em;
+}
+
+.card .card-meta {
+  margin: 2px 0 6px;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.card .canvas-wrap {
+  position: relative;
+  height: 170px;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 24px;
+}
+
+.modal[hidden] { display: none; }
+
+.modal-content {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 24px 28px 20px;
+  width: min(900px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.modal-close:hover { color: var(--text); }
+
+#modal-title { margin: 0 0 2px; font-size: 1.15rem; }
+
+.modal-subtitle {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.modal-canvas-wrap {
+  position: relative;
+  height: 440px;
+}
+
+.modal-pace {
+  margin: 10px 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: pre-line;
+}
