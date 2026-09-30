@@ -5,17 +5,35 @@ One entry per goal with a Chart.js-ready series list (each series is a
 for a given month - e.g. Forecast is null before the last actual month).
 """
 import json
+import re
 
 from data_pipeline import build_dataframe
 from goal_specs import MONTHS, QUARTER_OF_MONTH
 
 MONTH_LABELS = [m if m == "Base" else f"{m} ({QUARTER_OF_MONTH[m]})" for m in MONTHS]
 
-SERIES_ORDER = {"Actual": 0, "Forecast": 1, "Threshold": 2, "Target": 3}
+_TIER_MAGNITUDE_RE = re.compile(r"([\d.]+)\s*([KM]?)", re.IGNORECASE)
+_SUFFIX_MULTIPLIER = {"": 1, "K": 1_000, "M": 1_000_000}
+
+
+def _tier_magnitude(tier):
+    """Parse a spend-tier label like '>$500K' or '>=$1M' into a sortable number."""
+    m = _TIER_MAGNITUDE_RE.search(tier or "")
+    if not m:
+        return 0.0
+    return float(m.group(1)) * _SUFFIX_MULTIPLIER[m.group(2).upper()]
 
 
 def _series_name(tier, series_type):
     return series_type if series_type in ("Threshold", "Target") else f"{tier} {series_type}"
+
+
+def _series_sort_key(s):
+    # Actual/Forecast: grouped by tier (highest spend first), Actual before
+    # Forecast within a tier. Threshold/Target always come after, in that order.
+    if s["type"] in ("Actual", "Forecast"):
+        return (0, -_tier_magnitude(s["tier"]), 0 if s["type"] == "Actual" else 1)
+    return (1, 0 if s["type"] == "Threshold" else 1, 0)
 
 
 def build_site_data(csv_path):
@@ -30,11 +48,13 @@ def build_site_data(csv_path):
             for _, row in sdf.iterrows():
                 values[int(row["MonthIndex"])] = None if row["Value"] is None else round(float(row["Value"]), 2)
             name = _series_name(tier, series_type)
-            series_map[(tier, series_type)] = dict(
+            # Keyed by name (not (tier, type)) so Threshold/Target - identical
+            # across every tier of a multi-tier goal - collapse into one line
+            # instead of one redundant duplicate per tier.
+            series_map[name] = dict(
                 name=name, tier=tier, type=series_type, data=values,
-                order=SERIES_ORDER.get(series_type, 9),
             )
-        series = sorted(series_map.values(), key=lambda s: (s["order"], s["name"]))
+        series = sorted(series_map.values(), key=_series_sort_key)
 
         goals.append(dict(
             key=goal_name.lower().replace(" ", "_").replace(".", "").replace(",", ""),

@@ -1,8 +1,19 @@
 /* Renders the goals dashboard grid from data.json using Chart.js. */
 (() => {
-  const TIER_COLORS = ["#2563eb", "#f59e0b", "#6b7280", "#7c3aed", "#0ea5e9"];
-  const THRESHOLD_COLOR = "#dc2626";
-  const TARGET_COLOR = "#16a34a";
+  // Premier brand palette (see brand guidelines).
+  const PREMIER_NAVY = "#103454";
+  const PREMIER_BLUE = "#1797D7";
+  const PREMIER_TEAL = "#007F91";
+  const PREMIER_YELLOW = "#FFC532";
+  const PREMIER_ORANGE = "#E24301";
+  const ACCENT_GREY = "#82889B";
+
+  const TIER_COLORS = [PREMIER_BLUE, PREMIER_YELLOW, ACCENT_GREY, PREMIER_NAVY, PREMIER_TEAL];
+  const THRESHOLD_COLOR = PREMIER_ORANGE;
+  const TARGET_COLOR = PREMIER_TEAL;
+
+  Chart.defaults.font.family = "'Inter Tight', 'Roboto', Arial, sans-serif";
+  Chart.defaults.color = PREMIER_NAVY;
 
   const charts = new Map(); // goal key -> Chart instance (grid card)
   let modalChart = null;
@@ -43,30 +54,54 @@
     }));
   }
 
-  // Shades each fiscal quarter's column with an alternating tint, reading the
-  // quarter tag ("(Q1)" etc.) straight out of the month label strings.
+  // Shades each fiscal quarter's column with its own distinct tint, reading
+  // the quarter tag ("(Q1)" etc.) straight out of the month label strings.
+  // Each month's tick sits in the center of its own band (band edges are the
+  // midpoints between it and its neighbors, with the first/last bands
+  // extending out to the chart's edges) - this is what makes the last band
+  // (June) look "full width" rather than collapsing to nothing, since it
+  // still gets a proper half-band-plus-edge-margin region like every other
+  // month, just like the outermost band on the left (Base).
+  const QUARTER_TINTS = {
+    Q1: "#10345429", // Premier Navy
+    Q2: "#1797D740", // Premier Blue
+    Q3: "#007F9140", // Premier Teal
+    Q4: "#82889B40", // Premier (Accent) Grey
+  };
+
+  function quarterTint(q) {
+    return QUARTER_TINTS[q] || null;
+  }
+
+  function quarterBoundaries(chart) {
+    const { chartArea, scales } = chart;
+    const n = chart.data.labels.length;
+    const xPixels = Array.from({ length: n }, (_, i) => scales.x.getPixelForValue(i));
+    const boundaries = [chartArea.left];
+    for (let i = 0; i < n - 1; i++) boundaries.push((xPixels[i] + xPixels[i + 1]) / 2);
+    boundaries.push(chartArea.right);
+    return boundaries;
+  }
+
   const quarterBackgroundPlugin = {
     id: "quarterBackground",
     beforeDraw(chart) {
-      const { ctx, chartArea, scales } = chart;
+      const { ctx, chartArea } = chart;
       if (!chartArea) return;
       const labels = chart.data.labels;
-      const colors = { Q1: "#eff6ff", Q2: "#fff7ed", Q3: "#f0fdf4", Q4: "#faf5ff" };
-      let start = 0;
-      let currentQ = quarterOf(labels[0]);
+      const boundaries = quarterBoundaries(chart);
       ctx.save();
-      for (let i = 1; i <= labels.length; i++) {
-        const q = i < labels.length ? quarterOf(labels[i]) : null;
-        if (q !== currentQ) {
-          const x0 = scales.x.getPixelForValue(start);
-          const x1 = scales.x.getPixelForValue(i - 1) + (scales.x.getPixelForValue(1) - scales.x.getPixelForValue(0)) / 2;
-          if (currentQ && colors[currentQ]) {
-            ctx.fillStyle = colors[currentQ];
-            ctx.fillRect(x0, chartArea.top, x1 - x0, chartArea.bottom - chartArea.top);
-          }
-          start = i;
-          currentQ = q;
+      let i = 0;
+      while (i < labels.length) {
+        const q = quarterOf(labels[i]);
+        let j = i;
+        while (j + 1 < labels.length && quarterOf(labels[j + 1]) === q) j++;
+        const tint = quarterTint(q);
+        if (tint) {
+          ctx.fillStyle = tint;
+          ctx.fillRect(boundaries[i], chartArea.top, boundaries[j + 1] - boundaries[i], chartArea.bottom - chartArea.top);
         }
+        i = j + 1;
       }
       ctx.restore();
     },

@@ -100,6 +100,8 @@ def _fit_forecast(points, deadline_idx, target_value=None):
         val = last_val + slope * (idx - last_idx)
         if moving_toward_target:
             val = min(val, target_value) if target_direction > 0 else max(val, target_value)
+        # Every goal metric here is a count or a percentage - never negative.
+        val = max(val, 0.0)
         forecast[idx] = val
     return forecast
 

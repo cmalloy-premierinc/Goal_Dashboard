@@ -1,11 +1,22 @@
 :root {
-  --bg: #f4f6f9;
+  --premier-navy: #103454;
+  --premier-blue: #1797d7;
+  --premier-teal: #007f91;
+  --premier-yellow: #ffc532;
+  --premier-orange: #e24301;
+  --accent-grey: #82889b;
+  --light-grey: #f8f8f8;
+
+  --bg: var(--premier-navy);
   --card-bg: #ffffff;
-  --border: #dde2e8;
-  --text: #1f2933;
-  --muted: #5c6b7a;
-  --accent: #2563eb;
-  font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --border: #e3e6ea;
+  --text: var(--premier-navy);
+  --muted: var(--accent-grey);
+  --accent: var(--premier-blue);
+  --on-navy-text: #ffffff;
+  --on-navy-muted: #a9c6dd;
+
+  font-family: "Inter Tight", "Roboto", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -13,36 +24,70 @@
 body {
   margin: 0;
   background: var(--bg);
-  color: var(--text);
+  color: var(--on-navy-text);
+}
+
+.brand-bar {
+  height: 6px;
+  background: linear-gradient(90deg, var(--premier-teal), var(--premier-blue), var(--premier-yellow));
 }
 
 header {
-  padding: 20px 28px 8px;
+  padding: 22px 28px 14px;
   text-align: center;
+  background: transparent;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.brand-logo {
+  height: 38px;
+  width: auto;
+}
+
+.brand-word {
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  font-size: 1rem;
+  color: var(--on-navy-text);
+}
+
+.brand-word-accent {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--on-navy-muted);
 }
 
 h1 {
-  margin: 0 0 4px;
-  font-size: 1.5rem;
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--on-navy-text);
 }
 
 .subtitle {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.9rem;
+  color: var(--on-navy-muted);
+  font-size: 0.8rem;
 }
 
 .status-line {
-  margin: 6px 0 0;
-  font-size: 0.8rem;
-  color: var(--muted);
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: var(--on-navy-muted);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
-  padding: 16px 20px 40px;
+  gap: 16px;
+  padding: 20px 24px 48px;
 }
 
 @media (max-width: 1400px) {
@@ -57,31 +102,38 @@ h1 {
 
 .card {
   background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px 12px;
+  border-radius: 12px;
+  padding: 12px 14px 14px;
   cursor: pointer;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
   display: flex;
   flex-direction: column;
+  border-top: 4px solid var(--premier-blue);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
 }
 
 .card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  transform: translateY(-3px);
+  border-top-color: var(--premier-teal);
 }
 
 .card h3 {
   margin: 0;
   font-size: 0.82rem;
+  font-weight: 600;
   line-height: 1.25;
   min-height: 2.4em;
+  color: var(--premier-navy);
 }
 
 .card .card-meta {
-  margin: 2px 0 6px;
+  margin: 2px 0 8px;
   font-size: 0.68rem;
+  font-weight: 500;
   color: var(--muted);
+  letter-spacing: 0.02em;
 }
 
 .card .canvas-wrap {
@@ -92,7 +144,7 @@ h1 {
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(16, 52, 84, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,35 +156,38 @@ h1 {
 
 .modal-content {
   background: var(--card-bg);
-  border-radius: 12px;
-  padding: 24px 28px 20px;
+  border-radius: 14px;
+  padding: 26px 30px 22px;
   width: min(900px, 100%);
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 24px 64px rgba(16, 52, 84, 0.35);
+  border-top: 4px solid var(--premier-blue);
 }
 
 .modal-close {
   position: absolute;
-  top: 10px;
-  right: 14px;
+  top: 12px;
+  right: 16px;
   background: none;
   border: none;
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   line-height: 1;
   cursor: pointer;
   color: var(--muted);
 }
 
-.modal-close:hover { color: var(--text); }
+.modal-close:hover { color: var(--premier-orange); }
 
-#modal-title { margin: 0 0 2px; font-size: 1.15rem; }
+#modal-title { margin: 0 0 2px; font-size: 1.2rem; font-weight: 700; color: var(--premier-navy); }
 
 .modal-subtitle {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: var(--muted);
   font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .modal-canvas-wrap {
@@ -141,8 +196,9 @@ h1 {
 }
 
 .modal-pace {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   font-size: 0.8rem;
   color: var(--muted);
   white-space: pre-line;
 }
+

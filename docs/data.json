@@ -30,27 +30,6 @@
       ],
       "series": [
         {
-          "name": ">$250K Actual",
-          "tier": ">$250K",
-          "type": "Actual",
-          "data": [
-            100.0,
-            23.0,
-            70.0,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "order": 0
-        },
-        {
           "name": ">$500K Actual",
           "tier": ">$500K",
           "type": "Actual",
@@ -68,29 +47,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
-        },
-        {
-          "name": ">$250K Forecast",
-          "tier": ">$250K",
-          "type": "Forecast",
-          "data": [
-            null,
-            null,
-            70.0,
-            117.0,
-            164.0,
-            211.0,
-            258.0,
-            305.0,
-            352.0,
-            399.0,
-            446.0,
-            493.0,
-            540.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": ">$500K Forecast",
@@ -110,29 +67,47 @@
             143.0,
             158.0,
             173.0
-          ],
-          "order": 1
+          ]
         },
         {
-          "name": "Threshold",
+          "name": ">$250K Actual",
           "tier": ">$250K",
-          "type": "Threshold",
+          "type": "Actual",
           "data": [
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ],
-          "order": 2
+            100.0,
+            23.0,
+            70.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "name": ">$250K Forecast",
+          "tier": ">$250K",
+          "type": "Forecast",
+          "data": [
+            null,
+            null,
+            70.0,
+            117.0,
+            164.0,
+            211.0,
+            258.0,
+            305.0,
+            352.0,
+            399.0,
+            446.0,
+            493.0,
+            540.0
+          ]
         },
         {
           "name": "Threshold",
@@ -152,29 +127,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 2
-        },
-        {
-          "name": "Target",
-          "tier": ">$250K",
-          "type": "Target",
-          "data": [
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0
-          ],
-          "order": 3
+          ]
         },
         {
           "name": "Target",
@@ -194,8 +147,7 @@
             5.0,
             5.0,
             5.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -245,29 +197,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
-        },
-        {
-          "name": ">$500K Actual",
-          "tier": ">$500K",
-          "type": "Actual",
-          "data": [
-            61.0,
-            110.0,
-            58.0,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": ">$1M Forecast",
@@ -287,8 +217,27 @@
             5.0,
             5.0,
             5.0
-          ],
-          "order": 1
+          ]
+        },
+        {
+          "name": ">$500K Actual",
+          "tier": ">$500K",
+          "type": "Actual",
+          "data": [
+            61.0,
+            110.0,
+            58.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
         },
         {
           "name": ">$500K Forecast",
@@ -308,29 +257,7 @@
             5.0,
             5.0,
             5.0
-          ],
-          "order": 1
-        },
-        {
-          "name": "Threshold",
-          "tier": ">$1M",
-          "type": "Threshold",
-          "data": [
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Threshold",
@@ -350,29 +277,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 2
-        },
-        {
-          "name": "Target",
-          "tier": ">$1M",
-          "type": "Target",
-          "data": [
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0
-          ],
-          "order": 3
+          ]
         },
         {
           "name": "Target",
@@ -392,8 +297,7 @@
             5.0,
             5.0,
             5.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -443,29 +347,27 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
-          "name": ">=$25K Actual",
-          "tier": ">=$25K",
-          "type": "Actual",
+          "name": ">=$100K Forecast",
+          "tier": ">=$100K",
+          "type": "Forecast",
           "data": [
-            87.0,
-            21.0,
-            18.0,
-            13.0,
             null,
             null,
             null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          ],
-          "order": 0
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
         },
         {
           "name": ">=$50K Actual",
@@ -485,50 +387,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
-        },
-        {
-          "name": ">=$100K Forecast",
-          "tier": ">=$100K",
-          "type": "Forecast",
-          "data": [
-            null,
-            null,
-            null,
-            1.0,
-            -0.5,
-            -2.0,
-            -3.5,
-            -5.0,
-            -6.5,
-            -8.0,
-            -9.5,
-            -11.0,
-            -12.5
-          ],
-          "order": 1
-        },
-        {
-          "name": ">=$25K Forecast",
-          "tier": ">=$25K",
-          "type": "Forecast",
-          "data": [
-            null,
-            null,
-            null,
-            13.0,
-            9.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": ">=$50K Forecast",
@@ -548,50 +407,47 @@
             5.0,
             5.0,
             5.0
-          ],
-          "order": 1
+          ]
         },
         {
-          "name": "Threshold",
-          "tier": ">=$100K",
-          "type": "Threshold",
-          "data": [
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ],
-          "order": 2
-        },
-        {
-          "name": "Threshold",
+          "name": ">=$25K Actual",
           "tier": ">=$25K",
-          "type": "Threshold",
+          "type": "Actual",
           "data": [
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ],
-          "order": 2
+            87.0,
+            21.0,
+            18.0,
+            13.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "name": ">=$25K Forecast",
+          "tier": ">=$25K",
+          "type": "Forecast",
+          "data": [
+            null,
+            null,
+            null,
+            13.0,
+            9.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0
+          ]
         },
         {
           "name": "Threshold",
@@ -611,50 +467,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 2
-        },
-        {
-          "name": "Target",
-          "tier": ">=$100K",
-          "type": "Target",
-          "data": [
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0
-          ],
-          "order": 3
-        },
-        {
-          "name": "Target",
-          "tier": ">=$25K",
-          "type": "Target",
-          "data": [
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0
-          ],
-          "order": 3
+          ]
         },
         {
           "name": "Target",
@@ -674,8 +487,7 @@
             5.0,
             5.0,
             5.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -725,8 +537,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": "Total Forecast",
@@ -746,8 +557,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": "Threshold",
@@ -767,8 +577,7 @@
             120.0,
             120.0,
             120.0
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Target",
@@ -788,8 +597,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -839,8 +647,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": "Total Forecast",
@@ -860,8 +667,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": "Threshold",
@@ -881,8 +687,7 @@
             78.0,
             78.0,
             78.0
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Target",
@@ -902,8 +707,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -953,8 +757,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": "Total Forecast",
@@ -974,8 +777,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": "Threshold",
@@ -995,8 +797,7 @@
             20.0,
             20.0,
             20.0
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Target",
@@ -1016,8 +817,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -1067,8 +867,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": "Total Forecast",
@@ -1088,8 +887,7 @@
             100.0,
             100.0,
             100.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": "Threshold",
@@ -1109,8 +907,7 @@
             90.0,
             90.0,
             90.0
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Target",
@@ -1130,8 +927,7 @@
             100.0,
             100.0,
             100.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -1181,8 +977,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": "Total Forecast",
@@ -1202,8 +997,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": "Threshold",
@@ -1223,8 +1017,7 @@
             100.0,
             100.0,
             100.0
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Target",
@@ -1244,8 +1037,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -1295,8 +1087,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": "Total Forecast",
@@ -1316,8 +1107,7 @@
             null,
             null,
             null
-          ],
-          "order": 1
+          ]
         },
         {
           "name": "Threshold",
@@ -1337,8 +1127,7 @@
             184.9,
             184.9,
             184.9
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Target",
@@ -1358,8 +1147,7 @@
             0.0,
             0.0,
             0.0
-          ],
-          "order": 3
+          ]
         }
       ]
     },
@@ -1409,8 +1197,7 @@
             null,
             null,
             null
-          ],
-          "order": 0
+          ]
         },
         {
           "name": "Weighted Avg Forecast",
@@ -1430,8 +1217,7 @@
             100.0,
             100.0,
             100.0
-          ],
-          "order": 1
+          ]
         },
         {
           "name": "Threshold",
@@ -1451,8 +1237,7 @@
             50.0,
             50.0,
             50.0
-          ],
-          "order": 2
+          ]
         },
         {
           "name": "Target",
@@ -1472,8 +1257,7 @@
             100.0,
             100.0,
             100.0
-          ],
-          "order": 3
+          ]
         }
       ]
     }
