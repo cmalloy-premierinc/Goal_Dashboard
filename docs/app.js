@@ -115,6 +115,45 @@
     return MONTH_QUARTERS[idx] || null;
   }
 
+  let quarterCenterCache = null;
+
+  // One month-index per quarter (its middle month) to label on the secondary
+  // top axis, so "Q1"/"Q2"/etc. appears once per shaded block instead of on
+  // every tick.
+  function quarterCenterIndices() {
+    if (quarterCenterCache) return quarterCenterCache;
+    const groups = {};
+    MONTH_QUARTERS.forEach((q, i) => {
+      if (q) (groups[q] = groups[q] || []).push(i);
+    });
+    const centers = {};
+    Object.entries(groups).forEach(([q, idxs]) => {
+      centers[idxs[Math.floor(idxs.length / 2)]] = q;
+    });
+    quarterCenterCache = centers;
+    return centers;
+  }
+
+  // The Y axis was auto-scaling to fit runaway diverging Forecast lines (which
+  // can shoot up into the hundreds), squeezing the flat Threshold/Target
+  // reference lines down near zero. Scale instead to the Actual/Threshold/
+  // Target range - a Forecast that blows past it is still drawn, just clipped
+  // at the top edge, which is more honest than stretching the whole chart.
+  function yRange(goal) {
+    const values = goal.series
+      .filter(s => s.type !== "Forecast")
+      .flatMap(s => s.data)
+      .filter(v => v !== null && v !== undefined);
+    if (!values.length) return {};
+    const max = Math.max(...values);
+    const min = Math.min(0, ...values);
+    const pad = (max - min) * 0.15 || 1;
+    // A hard max/min (not suggestedMax/Min) so a Forecast line diverging past
+    // this range gets visually clipped at the edge instead of stretching the
+    // whole axis - suggestedMax only raises the floor, it doesn't cap it.
+    return { max: max + pad, min: Math.max(0, min - pad) };
+  }
+
   function makeConfig(goal, { legend = true, titleFont = 11 } = {}) {
     return {
       type: "line",
@@ -126,7 +165,23 @@
         interaction: { mode: "nearest", axis: "x", intersect: false },
         scales: {
           x: { ticks: { font: { size: titleFont }, autoSkip: true, maxRotation: 0, minRotation: 0 } },
-          y: { title: { display: true, text: goal.yLabel, font: { size: titleFont } }, beginAtZero: false },
+          xQuarter: {
+            type: "category",
+            labels: goal.months,
+            position: "top",
+            offset: false,
+            grid: { display: false, drawOnChartArea: false },
+            border: { display: false },
+            ticks: {
+              autoSkip: false,
+              font: { size: titleFont, weight: "700" },
+              callback: (_value, index) => quarterCenterIndices()[index] || "",
+            },
+          },
+          y: {
+            title: { display: true, text: goal.yLabel, font: { size: titleFont } },
+            ...yRange(goal),
+          },
         },
         plugins: {
           legend: {
