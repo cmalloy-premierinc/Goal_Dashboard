@@ -168,17 +168,13 @@
   // The Y axis was auto-scaling to fit runaway diverging Forecast lines (which
   // can shoot up into the hundreds), squeezing the flat Threshold/Target
   // reference lines down near zero. Scale instead to the Actual/Threshold/
-  // Target range - a Forecast that blows past it is still drawn, just clipped
-  // at the top edge, which is more honest than stretching the whole chart.
-  // "Base" (month index 0, last fiscal year's value) is also excluded: it's
-  // frequently the single largest number in the series and including it
-  // stretches the axis far beyond anything currently happening, squeezing
-  // the Threshold/Target gap even further for no benefit - Base is still
-  // plotted as a point, just not allowed to dictate the scale.
+  // Target range (Base included - it's a real data point and must stay
+  // visible) - a Forecast that blows past it is still drawn, just clipped at
+  // the top edge, which is more honest than stretching the whole chart.
   function yRange(goal) {
     const values = goal.series
       .filter(s => s.type !== "Forecast")
-      .flatMap(s => s.data.slice(1))
+      .flatMap(s => s.data)
       .filter(v => v !== null && v !== undefined);
     if (!values.length) return {};
     const max = Math.max(...values);
