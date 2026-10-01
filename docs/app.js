@@ -77,7 +77,7 @@
     return goal.series.map((s, i) => {
       const dataset = {
         label: s.name,
-        data: s.data.map(v => (v === null || v === undefined ? null : forward(v))),
+        data: s.data.map((v, x) => ({ x, y: v === null || v === undefined ? null : forward(v) })),
         rawData: s.data,
         borderColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
         backgroundColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
@@ -127,7 +127,7 @@
 
   function quarterBoundaries(chart) {
     const { chartArea, scales } = chart;
-    const n = chart.data.labels.length;
+    const n = MONTH_QUARTERS.length;
     const xPixels = Array.from({ length: n }, (_, i) => scales.x.getPixelForValue(i));
     const boundaries = [chartArea.left];
     for (let i = 0; i < n - 1; i++) boundaries.push((xPixels[i] + xPixels[i + 1]) / 2);
@@ -140,14 +140,14 @@
     beforeDraw(chart) {
       const { ctx, chartArea } = chart;
       if (!chartArea) return;
-      const labels = chart.data.labels;
+      const count = MONTH_QUARTERS.length;
       const boundaries = quarterBoundaries(chart);
       ctx.save();
       let i = 0;
-      while (i < labels.length) {
+      while (i < count) {
         const q = quarterOf(i);
         let j = i;
-        while (j + 1 < labels.length && quarterOf(j + 1) === q) j++;
+        while (j + 1 < count && quarterOf(j + 1) === q) j++;
         const tint = quarterTint(q);
         if (tint) {
           ctx.fillStyle = tint;
@@ -278,27 +278,42 @@
 
   function makeConfig(goal, { legend = true, titleFont = 11 } = {}) {
     const axis = yAxis(goal, titleFont <= 9);
+    const lastIdx = goal.months.length - 1;
+    // Numeric X axis (months are 0..12) so it can extend half a month past the
+    // last month; that gives Q4's shaded band the same width as Q1-Q3.
+    const xRange = { type: "linear", min: 0, max: lastIdx + 0.5 };
     return {
       type: "line",
-      data: { labels: goal.months, datasets: buildDatasets(goal, axis.forward) },
+      data: { datasets: buildDatasets(goal, axis.forward) },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
         interaction: { mode: "nearest", axis: "x", intersect: false },
         scales: {
-          x: { ticks: { font: { size: titleFont }, autoSkip: true, maxRotation: 0, minRotation: 0 } },
+          x: {
+            ...xRange,
+            afterBuildTicks: scale => { scale.ticks = goal.months.map((_, i) => ({ value: i })); },
+            ticks: {
+              font: { size: titleFont },
+              autoSkip: true,
+              maxRotation: 0,
+              minRotation: 0,
+              callback: value => goal.months[value] ?? "",
+            },
+          },
           xQuarter: {
-            type: "category",
-            labels: goal.months,
+            ...xRange,
             position: "top",
-            offset: false,
             grid: { display: false, drawOnChartArea: false },
             border: { display: false },
+            afterBuildTicks: scale => {
+              scale.ticks = Object.keys(quarterCenterIndices()).map(i => ({ value: Number(i) }));
+            },
             ticks: {
               autoSkip: false,
               font: { size: titleFont, weight: "700" },
-              callback: (_value, index) => quarterCenterIndices()[index] || "",
+              callback: value => quarterCenterIndices()[value] || "",
             },
           },
           y: {
@@ -315,6 +330,7 @@
             mode: "nearest",
             intersect: false,
             callbacks: {
+              title: items => (items.length ? goal.months[items[0].parsed.x] : ""),
               label: ctx => `${ctx.dataset.label}: ${formatValue(ctx.dataset.rawData[ctx.dataIndex])}`,
             },
           },
