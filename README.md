@@ -202,6 +202,10 @@ its own forecast and pace text.
   forecast down to 0). If the trend is moving away, it is left to diverge so
   that risk stays visible.
 - Values are floored at 0 (every metric is a count or percentage).
+- Count goals are whole items: forecast values, converted Threshold/Target
+  values (for example 90% off 1,849 is 184.9, shown as 185) and pace figures
+  are rounded up or to whole numbers. The two percentage charts (Process PCRs
+  and the weighted summary) keep one decimal.
 - With fewer than two FY27 points the slope is 0 (a flat line).
 
 ### Pace text (`_pace_texts()`)

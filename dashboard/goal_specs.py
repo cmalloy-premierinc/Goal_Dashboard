@@ -7,6 +7,7 @@ blocks, "N reviewed of M (NN%)" text, "count (delta%)" text, and
 declares which shape it uses (`value_kind`) so data_pipeline.py can parse all
 of them with one generic routine instead of one-off code per row.
 """
+import math
 import re
 
 MONTHS = ["Base", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
@@ -97,7 +98,9 @@ def _threshold_target_reduction(cell, baseline):
     pct = parse_pct_number(cell)
     if pct is None or baseline is None:
         return None
-    return baseline * (1 - pct / 100.0)
+    # Items are discrete: 184.9 remaining items is 185. round() first so float
+    # noise (e.g. 185.00000000000003) doesn't push ceil up an extra item.
+    return float(math.ceil(round(baseline * (1 - pct / 100.0), 6)))
 
 
 VALUE_KINDS = {

@@ -11,6 +11,8 @@ are flat reference lines spanning the whole fiscal year; Actual stops at the
 last month with data and Forecast picks up from there through the goal's
 deadline month.
 """
+import math
+
 import numpy as np
 import pandas as pd
 
@@ -87,11 +89,11 @@ def _finish_line(baseline, threshold, target):
     return min(threshold, target) if lower_is_better else max(threshold, target)
 
 
-def _fit_forecast(points, deadline_idx, target_value=None):
+def _fit_forecast(points, deadline_idx, target_value=None, integer=False):
     """points: sorted [(month_idx, value), ...] actuals. Returns {month_idx: value} for the
     forecast line, projected at the trailing slope from the last actual point to the deadline,
     clamped so it doesn't overshoot past target_value (the finish line) once it's trending
-    toward (not away from) it."""
+    toward (not away from) it. integer=True rounds each value up to a whole item."""
     if not points:
         return {}
     last_idx, last_val = points[-1]
@@ -118,6 +120,8 @@ def _fit_forecast(points, deadline_idx, target_value=None):
             val = min(val, target_value) if target_direction > 0 else max(val, target_value)
         # Every goal metric here is a count or a percentage - never negative.
         val = max(val, 0.0)
+        if integer:
+            val = float(math.ceil(round(val, 6)))
         forecast[idx] = val
     return forecast
 
@@ -127,20 +131,29 @@ def _pace_texts(points, target_value, deadline_month, deadline_idx, is_percent):
         return "", ""
     last_idx, last_val = points[-1]
     unit = "%/mo" if is_percent else "/mo"
+    digits = 1 if is_percent else 0
     trend_pts = _trend_points(points)
     if len(trend_pts) >= 2:
         xs = np.array([p[0] for p in trend_pts], dtype=float)
         ys = np.array([p[1] for p in trend_pts], dtype=float)
         slope, _ = np.polyfit(xs, ys, 1)
-        current_pace = f"Current Pace ({slope:+,.1f}{unit})"
+        current_pace = f"Current Pace ({_signed(slope, digits)}{unit})"
     else:
         current_pace = ""
     if deadline_idx > last_idx and target_value is not None:
         required = (target_value - last_val) / (deadline_idx - last_idx)
-        required_pace = f"Required {deadline_month} Target Pace ({required:+,.1f}{unit})"
+        required_pace = f"Required {deadline_month} Target Pace ({_signed(required, digits)}{unit})"
     else:
         required_pace = ""
     return current_pace, required_pace
+
+
+def _signed(value, digits):
+    """'+1,234' / '-73' / '+0' (no '-0' for tiny negatives)."""
+    rounded = round(value, digits)
+    if rounded == 0:
+        rounded = 0.0
+    return f"{rounded:+,.{digits}f}"
 
 
 def _goal_rows(row, spec):
@@ -179,6 +192,7 @@ def _goal_rows(row, spec):
         forecast_by_idx = _fit_forecast(
             points, deadline_idx,
             _finish_line(baseline_by_tier[tier], threshold_value, target_value),
+            integer=not is_percent,
         )
         current_pace, required_pace = _pace_texts(
             points, target_value, deadline_month, deadline_idx, is_percent
