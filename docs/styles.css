@@ -119,6 +119,13 @@ h1 {
   border-top-color: var(--premier-teal);
 }
 
+/* Forecast projected to miss Target by the deadline. */
+.card.at-risk,
+.card.at-risk:hover,
+.modal-content.at-risk {
+  border-top-color: #d0021b;
+}
+
 .card h3 {
   margin: 0;
   font-size: 0.82rem;

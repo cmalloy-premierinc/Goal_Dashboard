@@ -38,6 +38,40 @@
     return map;
   }
 
+  function lastNonNull(arr) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] !== null && arr[i] !== undefined) return arr[i];
+    }
+    return null;
+  }
+
+  // At risk if any tier's projected value at the deadline misses Target.
+  // Direction is inferred per tier from Base vs Target (Target below Base
+  // means lower is better), falling back to Threshold vs Target.
+  function isAtRisk(goal) {
+    const target = goal.series.find(s => s.type === "Target");
+    const threshold = goal.series.find(s => s.type === "Threshold");
+    if (!target) return false;
+    const targetValue = lastNonNull(target.data);
+    const thresholdValue = threshold ? lastNonNull(threshold.data) : null;
+    if (targetValue === null) return false;
+    const deadlineIdx = goal.months.indexOf(goal.deadlineMonth);
+
+    const tiers = [...new Set(goal.series.filter(s => s.type === "Actual" || s.type === "Forecast").map(s => s.tier))];
+    return tiers.some(tier => {
+      const actual = goal.series.find(s => s.tier === tier && s.type === "Actual");
+      const forecast = goal.series.find(s => s.tier === tier && s.type === "Forecast");
+      const reference = actual?.data[0] ?? thresholdValue;
+      const higherIsBetter = reference === null || reference === undefined || targetValue >= reference;
+      const projected =
+        (deadlineIdx >= 0 ? (forecast?.data[deadlineIdx] ?? actual?.data[deadlineIdx]) : null) ??
+        lastNonNull(forecast ? forecast.data : []) ??
+        lastNonNull(actual ? actual.data : []);
+      if (projected === null || projected === undefined) return false;
+      return higherIsBetter ? projected < targetValue : projected > targetValue;
+    });
+  }
+
   function buildDatasets(goal) {
     const tierIdx = tierIndexMap(goal);
     const thresholdIdx = goal.series.findIndex(s => s.type === "Threshold");
@@ -240,7 +274,7 @@
     grid.innerHTML = "";
     data.goals.forEach(goal => {
       const card = document.createElement("div");
-      card.className = "card";
+      card.className = isAtRisk(goal) ? "card at-risk" : "card";
       card.innerHTML = `
         <h3>${goal.order}. ${escapeHtml(goal.title)}</h3>
         <div class="card-meta">${escapeHtml(subtitleLine(goal))}</div>
@@ -257,6 +291,7 @@
 
   function openModal(goal) {
     const modal = document.getElementById("modal");
+    modal.querySelector(".modal-content").classList.toggle("at-risk", isAtRisk(goal));
     document.getElementById("modal-title").textContent = `${goal.order}. ${goal.title}`;
     document.getElementById("modal-subtitle").textContent = subtitleLine(goal);
     const paceParts = [
