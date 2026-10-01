@@ -79,6 +79,8 @@
         label: s.name,
         data: s.data.map((v, x) => ({ x, y: v === null || v === undefined ? null : forward(v) })),
         rawData: s.data,
+        seriesType: s.type,
+        tier: s.tier,
         borderColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
         backgroundColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
         borderDash: dashForSeries(s),
@@ -329,6 +331,16 @@
           tooltip: {
             mode: "nearest",
             intersect: false,
+            // The Forecast line is seeded with the last Actual value so the
+            // lines connect; don't repeat that point in the tooltip.
+            filter: item => {
+              if (item.dataset.seriesType !== "Forecast") return true;
+              const actual = item.chart.data.datasets.find(
+                d => d.seriesType === "Actual" && d.tier === item.dataset.tier
+              );
+              const actualValue = actual ? actual.rawData[item.dataIndex] : null;
+              return actualValue === null || actualValue === undefined;
+            },
             callbacks: {
               title: items => (items.length ? goal.months[items[0].parsed.x] : ""),
               label: ctx => `${ctx.dataset.label}: ${formatValue(ctx.dataset.rawData[ctx.dataIndex])}`,
