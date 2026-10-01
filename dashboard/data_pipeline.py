@@ -1,4 +1,4 @@
-"""Parse goals.csv into a tidy long-format table ready for the Tableau extract.
+"""Parse goals.csv into a tidy long-format table (one row per goal/tier/series/month).
 
 Produces one DataFrame with one row per (Goal, Tier, SeriesType, Month):
     Goal, GoalOrder, Owner, WeightPct, Tier, SeriesType, Series,

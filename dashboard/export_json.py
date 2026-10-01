@@ -6,6 +6,7 @@ for a given month - e.g. Forecast is null before the last actual month).
 """
 import json
 import re
+from datetime import datetime, timezone
 
 from data_pipeline import build_dataframe
 from goal_specs import MONTHS, QUARTER_OF_MONTH
@@ -17,6 +18,19 @@ from goal_specs import MONTHS, QUARTER_OF_MONTH
 # (MONTH_QUARTERS) instead of being embedded in the displayed label text.
 MONTH_LABELS = list(MONTHS)
 MONTH_QUARTERS = [None if m == "Base" else QUARTER_OF_MONTH[m] for m in MONTHS]
+
+# Calendar year in which the fiscal year's first month (Jul) falls.
+FISCAL_YEAR_START_YEAR = 2026
+
+
+def _data_through_label(df):
+    """'Sep 2026'-style label for the latest month that has any Actual value."""
+    actuals = df[(df["SeriesType"] == "Actual") & (df["MonthIndex"] > 0)]
+    if actuals.empty:
+        return ""
+    month = MONTHS[int(actuals["MonthIndex"].max())]
+    year = FISCAL_YEAR_START_YEAR + (1 if QUARTER_OF_MONTH[month] in ("Q3", "Q4") else 0)
+    return f"{month} {year}"
 
 _TIER_MAGNITUDE_RE = re.compile(r"([\d.]+)\s*([KM]?)", re.IGNORECASE)
 _SUFFIX_MULTIPLIER = {"": 1, "K": 1_000, "M": 1_000_000}
@@ -78,7 +92,13 @@ def build_site_data(csv_path):
             series=series,
         ))
     goals.sort(key=lambda g: g["order"])
-    return dict(generatedFromRows=len(df), monthQuarters=MONTH_QUARTERS, goals=goals)
+    return dict(
+        generatedFromRows=len(df),
+        generatedAt=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        dataThrough=_data_through_label(df),
+        monthQuarters=MONTH_QUARTERS,
+        goals=goals,
+    )
 
 
 def write_site_data(csv_path, out_path):

@@ -5,7 +5,7 @@ plus a weighted portfolio summary, built from `goals.csv`.
 
 ## Live site
 
-`docs/` is a self-contained static site (HTML/CSS/JS, Chart.js via CDN, no
+`docs/` is a self-contained static site (HTML/CSS/JS, bundled Chart.js, no
 build step) meant to be served by GitHub Pages from this repo.
 
 ## Update the dashboard with new monthly numbers
@@ -58,6 +58,4 @@ Git is not installed on this machine, so these steps are manual:
 - `dashboard/` - the Python pipeline: `goal_specs.py` (per-goal parsing
   rules), `data_pipeline.py` (parsing/scoring/forecasting), `export_json.py`
   (writes `docs/data.json`), `main.py` (CLI entry point).
-- `dashboard/output/`, `dashboard/_tableau_validator/`, `write_extract.py`,
-  `build_workbook.py` - an earlier Tableau-workbook approach that's no
-  longer used (kept in case it's useful later); not needed for the site.
+- `docs/vendor/` - a pinned local copy of Chart.js 4.4.4 (no CDN dependency).

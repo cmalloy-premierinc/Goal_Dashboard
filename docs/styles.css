@@ -83,6 +83,34 @@ h1 {
   color: var(--on-navy-muted);
 }
 
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.summary-pill {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 0.8rem;
+  color: var(--on-navy-muted);
+}
+
+.summary-pill strong {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--on-navy-text);
+}
+
+.summary-pill.risk strong { color: #ff6b7a; }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

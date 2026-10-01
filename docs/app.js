@@ -15,7 +15,6 @@
   Chart.defaults.font.family = "'Inter Tight', 'Roboto', Arial, sans-serif";
   Chart.defaults.color = PREMIER_NAVY;
 
-  const charts = new Map(); // goal key -> Chart instance (grid card)
   let modalChart = null;
   let MONTH_QUARTERS = []; // parallel to each goal's months[], set once data.json loads
 
@@ -284,9 +283,39 @@
       grid.appendChild(card);
 
       const canvas = card.querySelector("canvas");
-      const chart = new Chart(canvas.getContext("2d"), makeConfig(goal, { legend: false, titleFont: 9 }));
-      charts.set(goal.key, chart);
+      new Chart(canvas.getContext("2d"), makeConfig(goal, { legend: false, titleFont: 9 }));
     });
+  }
+
+  const isSummaryGoal = goal => goal.series.some(s => s.tier === "Weighted Avg");
+
+  function renderSummary(data) {
+    const tracked = data.goals.filter(g => !isSummaryGoal(g));
+    const atRisk = tracked.filter(isAtRisk).length;
+    const summaryGoal = data.goals.find(isSummaryGoal);
+    const actual = summaryGoal && summaryGoal.series.find(s => s.type === "Actual");
+    const score = actual ? lastNonNull(actual.data) : null;
+
+    const pills = [
+      [tracked.length, "goals tracked", ""],
+      [atRisk, "at risk", atRisk > 0 ? "risk" : ""],
+      [tracked.length - atRisk, "on track", ""],
+    ];
+    if (score !== null) pills.push([`${Math.round(score)}%`, "weighted score", ""]);
+
+    document.getElementById("summary").innerHTML = pills
+      .map(([value, label, cls]) => `<div class="summary-pill ${cls}"><strong>${value}</strong>${label}</div>`)
+      .join("");
+  }
+
+  function statusText(data) {
+    const parts = [];
+    if (data.dataThrough) parts.push(`Data through ${data.dataThrough}`);
+    if (data.generatedAt) {
+      const updated = new Date(data.generatedAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+      parts.push(`Updated ${updated}`);
+    }
+    return parts.join(" \u00b7 ");
   }
 
   function openModal(goal) {
@@ -338,8 +367,8 @@
     .then(data => {
       MONTH_QUARTERS = data.monthQuarters || [];
       renderGrid(data);
-      document.getElementById("status-line").textContent =
-        `Loaded ${data.goals.length} goals from ${data.generatedFromRows} data rows.`;
+      renderSummary(data);
+      document.getElementById("status-line").textContent = statusText(data);
     })
     .catch(err => {
       document.getElementById("status-line").textContent =

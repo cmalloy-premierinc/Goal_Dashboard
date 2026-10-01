@@ -4,10 +4,6 @@
                        file the GitHub Pages site (docs/index.html) reads.
                        Run this every time you add this month's numbers to
                        goals.csv, then commit + push docs/data.json.
-
-(The earlier Tableau workbook pipeline - write_extract.py / build_workbook.py -
-is still in this folder but no longer used by default; the project moved to a
-static site because Tableau Desktop kept rejecting the hand-authored .twb.)
 """
 import argparse
 import os
