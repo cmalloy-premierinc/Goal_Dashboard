@@ -132,12 +132,12 @@ def _pace_texts(points, target_value, deadline_month, deadline_idx, is_percent):
         xs = np.array([p[0] for p in trend_pts], dtype=float)
         ys = np.array([p[1] for p in trend_pts], dtype=float)
         slope, _ = np.polyfit(xs, ys, 1)
-        current_pace = f"Current Pace ({slope:+.1f}{unit})"
+        current_pace = f"Current Pace ({slope:+,.1f}{unit})"
     else:
         current_pace = ""
     if deadline_idx > last_idx and target_value is not None:
         required = (target_value - last_val) / (deadline_idx - last_idx)
-        required_pace = f"Required {deadline_month} Target Pace ({required:+.1f}{unit})"
+        required_pace = f"Required {deadline_month} Target Pace ({required:+,.1f}{unit})"
     else:
         required_pace = ""
     return current_pace, required_pace
@@ -221,6 +221,13 @@ def _goal_rows(row, spec):
     return records, weight_pct, achievement_by_month_idx
 
 
+def _fmt_number(value):
+    """1849.0 -> '1,849'; 184.89999999999995 -> '184.9' (display text only)."""
+    if value is None:
+        return ""
+    return f"{value:,.2f}".rstrip("0").rstrip(".")
+
+
 def _row(spec, weight_pct, tier, series_type, month_idx, value,
          threshold_value, target_value, deadline_month, current_pace, required_pace):
     month = MONTHS[month_idx]
@@ -230,8 +237,8 @@ def _row(spec, weight_pct, tier, series_type, month_idx, value,
         Series=series_type if series_type in ("Threshold", "Target") else f"{tier} {series_type}",
         Month=month, MonthIndex=month_idx, Quarter=QUARTER_OF_MONTH[month],
         Value=value,
-        ThresholdText=str(threshold_value) if threshold_value is not None else "",
-        TargetText=str(target_value) if target_value is not None else "",
+        ThresholdText=_fmt_number(threshold_value),
+        TargetText=_fmt_number(target_value),
         DeadlineMonth=deadline_month, YLabel=spec["y_label"],
         CurrentPaceText=current_pace, RequiredPaceText=required_pace,
     )
