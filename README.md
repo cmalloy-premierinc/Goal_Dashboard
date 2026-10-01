@@ -270,9 +270,10 @@ the logic. There is no build step.
     Threshold and Target spread out.
   - *Square-root scale*: when the Threshold-to-Target gap is under 20% of the
     axis height, values are plotted on a square-root scale (still zero-based,
-    tick labels show the real values, tooltips show the real values). Cards
-    using it say `√ scale` in the subtitle. Forecast lines look curved on these
-    charts because they are straight in real values.
+    tick labels show the real values, tooltips show the real values). Forecast
+    lines look curved on these charts because they are straight in real values.
+  - On every chart, the Threshold and Target values always get their own
+    labelled Y tick; automatic ticks that would crowd them are dropped.
 - **Month labels** are short (`Jul`) and may skip alternate months on small
   cards depending on available width.
 

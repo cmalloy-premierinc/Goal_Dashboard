@@ -224,12 +224,20 @@
     return ticks;
   }
 
+  // Combines axis tick values with the Threshold/Target values so each
+  // reference line gets its own labelled tick. Other ticks that would crowd a
+  // reference tick (closer than minGap in plotted units) are dropped.
+  function withReferenceTicks(values, refs, forward, minGap) {
+    const kept = values.filter(v => refs.every(r => Math.abs(forward(v) - forward(r)) >= minGap));
+    return [...new Set([...kept, ...refs])].sort((a, b) => a - b);
+  }
+
   // Returns the Y-axis transform plus Chart.js scale options for a goal.
   // Scales to the non-Forecast data (Base included) so a diverging Forecast is
   // clipped at the top edge instead of stretching the axis (a hard max, since
   // suggestedMax only raises the floor).
   function yAxis(goal, compact) {
-    const identity = { forward: v => v, inverse: v => v, sqrt: false };
+    const identity = { forward: v => v, inverse: v => v };
     const values = goal.series
       .filter(s => s.type !== "Forecast")
       .flatMap(s => s.data)
@@ -238,6 +246,26 @@
     const lo = Math.min(...values);
     const hi = Math.max(...values);
 
+    const threshold = goal.series.find(s => s.type === "Threshold");
+    const target = goal.series.find(s => s.type === "Target");
+    const t = threshold ? lastNonNull(threshold.data) : null;
+    const g = target ? lastNonNull(target.data) : null;
+    const refs = [t, g].filter(v => v !== null);
+    const tickGapShare = compact ? 0.12 : 0.07;
+
+    // Linear axes: keep Chart.js's automatic ticks, then add the reference ones.
+    const linearScale = (min, max) => ({
+      min,
+      max,
+      afterBuildTicks: axis => {
+        const merged = withReferenceTicks(
+          axis.ticks.map(tick => tick.value), refs, identity.forward, tickGapShare * (max - min)
+        );
+        axis.ticks = merged.filter(v => v >= min && v <= max).map(v => ({ value: v }));
+      },
+      ticks: { precision: 0, callback: v => formatValue(v) },
+    });
+
     // Values all far from zero (e.g. a 56-100% completion goal): crop the
     // baseline so Threshold and Target spread across the plot.
     if (hi > 0 && lo / hi > 0.4) {
@@ -245,26 +273,23 @@
       const step = Math.pow(10, Math.floor(Math.log10(range)));
       const min = Math.max(0, Math.floor((lo - 0.08 * range) / step) * step);
       const max = Math.ceil((hi + 0.08 * range) / step) * step;
-      return { ...identity, scale: { min, max, ticks: { precision: 0 } } };
+      return { ...identity, scale: linearScale(min, max) };
     }
 
     const max = niceCeil(hi * 1.08);
-    const threshold = goal.series.find(s => s.type === "Threshold");
-    const target = goal.series.find(s => s.type === "Target");
-    const t = threshold ? lastNonNull(threshold.data) : null;
-    const g = target ? lastNonNull(target.data) : null;
     const gapShare = t !== null && g !== null ? Math.abs(g - t) / max : 1;
 
     if (gapShare >= MIN_REFERENCE_GAP_SHARE) {
-      return { ...identity, scale: { min: 0, max, ticks: { precision: 0 } } };
+      return { ...identity, scale: linearScale(0, max) };
     }
 
     const forward = v => Math.sqrt(Math.max(v, 0));
-    const tickValues = sqrtTickValues(max, compact ? 0.17 : 0.1);
+    const tickValues = withReferenceTicks(
+      sqrtTickValues(max, compact ? 0.17 : 0.1), refs, forward, tickGapShare * forward(max)
+    );
     return {
       forward,
       inverse: v => v * v,
-      sqrt: true,
       scale: {
         min: 0,
         max: forward(max),
@@ -357,7 +382,7 @@
   }
 
   function subtitleLine(goal) {
-    const bits = [goal.owner, weightLabel(goal), yAxis(goal, true).sqrt ? "\u221a scale" : ""].filter(Boolean);
+    const bits = [goal.owner, weightLabel(goal)].filter(Boolean);
     return bits.join(" | ");
   }
 
