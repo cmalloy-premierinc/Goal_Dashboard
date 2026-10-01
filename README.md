@@ -196,8 +196,11 @@ its own forecast and pace text.
 - A straight line is fitted to the FY27 monthly actuals. The Base point is
   excluded from the fit because it sits a full year before Jul.
 - It is projected forward from the last actual value at that slope.
-- If the trend is moving toward Target, the forecast is clamped at Target. If
-  it is moving away, it is left to diverge so that risk stays visible.
+- If the trend is moving toward the finish line, the forecast is clamped there.
+  The finish line is the furthest value in the improving direction among
+  Threshold and Target (so NII goals, with Threshold 0 and Target 5, can
+  forecast down to 0). If the trend is moving away, it is left to diverge so
+  that risk stays visible.
 - Values are floored at 0 (every metric is a count or percentage).
 - With fewer than two FY27 points the slope is 0 (a flat line).
 

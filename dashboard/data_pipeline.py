@@ -72,10 +72,26 @@ def _trend_points(points):
     return points
 
 
+def _finish_line(baseline, threshold, target):
+    """Furthest value in the improving direction, among Threshold and Target.
+
+    A goal can overshoot Target (e.g. 0 beats a Target of 5 when Threshold is 0),
+    so a forecast shouldn't stop at Target when Threshold is more ambitious.
+    Direction comes from Baseline vs Target, or Threshold vs Target if equal.
+    """
+    if target is None:
+        return None
+    if threshold is None:
+        return target
+    lower_is_better = baseline > target if baseline != target else target < threshold
+    return min(threshold, target) if lower_is_better else max(threshold, target)
+
+
 def _fit_forecast(points, deadline_idx, target_value=None):
     """points: sorted [(month_idx, value), ...] actuals. Returns {month_idx: value} for the
     forecast line, projected at the trailing slope from the last actual point to the deadline,
-    clamped so it doesn't overshoot past Target once it's trending toward (not away from) it."""
+    clamped so it doesn't overshoot past target_value (the finish line) once it's trending
+    toward (not away from) it."""
     if not points:
         return {}
     last_idx, last_val = points[-1]
@@ -160,7 +176,10 @@ def _goal_rows(row, spec):
                 points.append((MONTHS.index(month), values[tier]))
         points.sort()
 
-        forecast_by_idx = _fit_forecast(points, deadline_idx, target_value)
+        forecast_by_idx = _fit_forecast(
+            points, deadline_idx,
+            _finish_line(baseline_by_tier[tier], threshold_value, target_value),
+        )
         current_pace, required_pace = _pace_texts(
             points, target_value, deadline_month, deadline_idx, is_percent
         )
