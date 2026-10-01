@@ -71,13 +71,14 @@
     });
   }
 
-  function buildDatasets(goal) {
+  function buildDatasets(goal, forward = v => v) {
     const tierIdx = tierIndexMap(goal);
     const thresholdIdx = goal.series.findIndex(s => s.type === "Threshold");
     return goal.series.map((s, i) => {
       const dataset = {
         label: s.name,
-        data: s.data,
+        data: s.data.map(v => (v === null || v === undefined ? null : forward(v))),
+        rawData: s.data,
         borderColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
         backgroundColor: colorForSeries(s, tierIdx[s.tier] ?? 0),
         borderDash: dashForSeries(s),
@@ -181,47 +182,105 @@
     return centers;
   }
 
-  // Rounds up to a "nice" number (1/2/2.5/5/10 x a power of ten) so the Y axis
-  // max - and therefore its auto-generated tick values - land on whole,
-  // human-friendly numbers instead of an arbitrary padded decimal.
+  // Round up to a 1/1.2/1.5/2/2.5/3/4/5/6/8/10 x 10^n value. Finer than a
+  // 1-2-5 ladder so the axis max never overshoots the data by nearly 2x
+  // (which would squeeze the Threshold/Target gap against the bottom).
+  const NICE_STEPS = [1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10];
   function niceCeil(value) {
     if (!(value > 0)) return 1;
-    const exponent = Math.floor(Math.log10(value));
-    const magnitude = Math.pow(10, exponent);
+    const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
     const residual = value / magnitude;
-    let niceResidual;
-    if (residual <= 1) niceResidual = 1;
-    else if (residual <= 2) niceResidual = 2;
-    else if (residual <= 2.5) niceResidual = 2.5;
-    else if (residual <= 5) niceResidual = 5;
-    else niceResidual = 10;
-    return niceResidual * magnitude;
+    return NICE_STEPS.find(s => s >= residual - 1e-9) * magnitude;
   }
 
-  // The Y axis was auto-scaling to fit runaway diverging Forecast lines (which
-  // can shoot up into the hundreds), squeezing the flat Threshold/Target
-  // reference lines down near zero. Scale instead to the Actual/Threshold/
-  // Target range (Base included - it's a real data point and must stay
-  // visible) - a Forecast that blows past it is still drawn, just clipped at
-  // the top edge, which is more honest than stretching the whole chart.
-  function yRange(goal) {
+  // Below this Threshold-to-Target gap (as a share of the axis height) a
+  // linear zero-based axis squeezes the two lines together, so the axis is
+  // switched to a square-root scale (labelled, zero-based) that gives small
+  // values more room.
+  const MIN_REFERENCE_GAP_SHARE = 0.2;
+
+  // "Nice" 1/2/5 x 10^n tick values (largest first) that fit under max.
+  function sqrtTickValues(max, gapShare) {
+    const candidates = [];
+    for (let e = Math.floor(Math.log10(max)); e >= 0; e--) {
+      [5, 2, 1].forEach(m => {
+        const v = m * Math.pow(10, e);
+        if (v <= max) candidates.push(v);
+      });
+    }
+    const gap = gapShare * Math.sqrt(max);
+    const ticks = [];
+    let last = Infinity;
+    candidates.forEach(c => {
+      if (last - Math.sqrt(c) >= gap) {
+        ticks.push(c);
+        last = Math.sqrt(c);
+      }
+    });
+    while (ticks.length && Math.sqrt(ticks[ticks.length - 1]) < gap) ticks.pop();
+    ticks.push(0);
+    return ticks;
+  }
+
+  // Returns the Y-axis transform plus Chart.js scale options for a goal.
+  // Scales to the non-Forecast data (Base included) so a diverging Forecast is
+  // clipped at the top edge instead of stretching the axis (a hard max, since
+  // suggestedMax only raises the floor).
+  function yAxis(goal, compact) {
+    const identity = { forward: v => v, inverse: v => v, sqrt: false };
     const values = goal.series
       .filter(s => s.type !== "Forecast")
       .flatMap(s => s.data)
       .filter(v => v !== null && v !== undefined);
-    if (!values.length) return {};
-    const max = Math.max(...values);
-    // A hard max (not suggestedMax) so a Forecast line diverging past this
-    // range gets visually clipped at the edge instead of stretching the whole
-    // axis - suggestedMax only raises the floor, it doesn't cap it. Rounded
-    // to a "nice" number so ticks come out as whole numbers, not decimals.
-    return { min: 0, max: niceCeil(max * 1.15 || 1), ticks: { precision: 0 } };
+    if (!values.length) return { ...identity, scale: {} };
+    const lo = Math.min(...values);
+    const hi = Math.max(...values);
+
+    // Values all far from zero (e.g. a 56-100% completion goal): crop the
+    // baseline so Threshold and Target spread across the plot.
+    if (hi > 0 && lo / hi > 0.4) {
+      const range = hi - lo;
+      const step = Math.pow(10, Math.floor(Math.log10(range)));
+      const min = Math.max(0, Math.floor((lo - 0.08 * range) / step) * step);
+      const max = Math.ceil((hi + 0.08 * range) / step) * step;
+      return { ...identity, scale: { min, max, ticks: { precision: 0 } } };
+    }
+
+    const max = niceCeil(hi * 1.08);
+    const threshold = goal.series.find(s => s.type === "Threshold");
+    const target = goal.series.find(s => s.type === "Target");
+    const t = threshold ? lastNonNull(threshold.data) : null;
+    const g = target ? lastNonNull(target.data) : null;
+    const gapShare = t !== null && g !== null ? Math.abs(g - t) / max : 1;
+
+    if (gapShare >= MIN_REFERENCE_GAP_SHARE) {
+      return { ...identity, scale: { min: 0, max, ticks: { precision: 0 } } };
+    }
+
+    const forward = v => Math.sqrt(Math.max(v, 0));
+    const tickValues = sqrtTickValues(max, compact ? 0.17 : 0.1);
+    return {
+      forward,
+      inverse: v => v * v,
+      sqrt: true,
+      scale: {
+        min: 0,
+        max: forward(max),
+        afterBuildTicks: axis => { axis.ticks = tickValues.map(v => ({ value: forward(v) })); },
+        ticks: { callback: v => formatValue(v * v) },
+      },
+    };
+  }
+
+  function formatValue(v) {
+    return Number(v).toLocaleString(undefined, { maximumFractionDigits: 1 });
   }
 
   function makeConfig(goal, { legend = true, titleFont = 11 } = {}) {
+    const axis = yAxis(goal, titleFont <= 9);
     return {
       type: "line",
-      data: { labels: goal.months, datasets: buildDatasets(goal) },
+      data: { labels: goal.months, datasets: buildDatasets(goal, axis.forward) },
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -244,7 +303,7 @@
           },
           y: {
             title: { display: true, text: goal.yLabel, font: { size: titleFont } },
-            ...yRange(goal),
+            ...axis.scale,
           },
         },
         plugins: {
@@ -252,7 +311,13 @@
             display: legend,
             labels: { boxWidth: 12, font: { size: 10 } },
           },
-          tooltip: { mode: "nearest", intersect: false },
+          tooltip: {
+            mode: "nearest",
+            intersect: false,
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${formatValue(ctx.dataset.rawData[ctx.dataIndex])}`,
+            },
+          },
         },
       },
       plugins: [quarterBackgroundPlugin],
@@ -264,7 +329,7 @@
   }
 
   function subtitleLine(goal) {
-    const bits = [goal.owner, weightLabel(goal)].filter(Boolean);
+    const bits = [goal.owner, weightLabel(goal), yAxis(goal, true).sqrt ? "\u221a scale" : ""].filter(Boolean);
     return bits.join(" | ");
   }
 
